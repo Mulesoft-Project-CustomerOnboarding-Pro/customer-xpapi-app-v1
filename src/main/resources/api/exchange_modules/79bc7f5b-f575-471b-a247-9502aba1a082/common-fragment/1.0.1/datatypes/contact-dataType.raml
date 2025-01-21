@@ -1,0 +1,34 @@
+#%RAML 1.0 DataType
+
+type: object
+properties:
+  firstName:
+    required: true
+    type: string
+    example: "Harshvardhan"
+
+  lastName:
+    required: true
+    type: string
+    example: "Tyagi"
+  
+  countryCode:
+    required: false
+    type: string
+    example: "+91"
+
+  mobile:
+    required: false
+    type: string
+    example: "9055983014"
+
+  email:
+    type: string
+    required: true
+    example: "harshtyagi3636@gmail.com"
+    pattern: ^.+@.+\..+$
+
+example : !include ../examples/contact-example.json
+
+      
+      
