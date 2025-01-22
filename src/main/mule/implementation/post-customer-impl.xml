@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="post-customer-implSub_Flow" doc:id="210bd540-191e-4103-af93-1e22c3fafb04">
+		<ee:transform doc:name="Transform Message" doc:id="fc025a2c-79ef-4831-9274-768cc363d8e3">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="9f950b0e-bdab-49b1-ba4f-ee628552c59b" message="#[%dw 2.0 &#10;&#10;output application/json indent = false &#10;--- &#10;{ 	&#10;    TimeStamp: vars.startTime, &#10;    transactionId: vars.headers.'x-cms-transactionid:',&#10;    AppName: app.name, 	&#10;    FlowName: flow.name, 	&#10;    BusinessProcessName:  &quot;call from process to system&quot;, 	&#10;    Category:  &quot;Customer&quot;, 	&#10;    OriginatingApplication:  &quot;Process API&quot;, 	&#10;    DesinationApplication:  &quot;CUSTOMER SAPI&quot;, 	&#10;    CustomerId: &quot;NA&quot;, 	&#10;    txnState:  &quot;START &quot; &#10;}]" />
+		<http:request method="POST" doc:name="Request" doc:id="26fafc99-5517-49e9-aec0-6a8f7e893e17" config-ref="HTTP_Request_Configuration_CustomerPAPI" path="${http.requester.papi.customer.registration.path}" responseTimeout="${http.response.timeout}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"clientSecret" : Mule::p("sapi.clientSecret"),
+	"x-cms-transactionId" : vars.requestData.headers.'x-cms-transactionid',
+	"clientId" : Mule::p("sapi.clientId"),
+	"authorization" : "Bearer dshvbdfchzjxbcjdbcjksdbjsdbjb",
+	"accept" : "application/json"
+}]]]></http:headers>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="53dd7c63-f116-493d-8a59-9d590b400f66" message="#[%dw 2.0 &#10;&#10;output application/json indent = false &#10;--- &#10;{ 	&#10;    TimeStamp: (now() &gt;&gt; &quot;UTC&quot;)  as String {format: &quot;yyyy-MM-dd:hh-mm-ss&quot;}, &#10;    transactionId: vars.headers.'x-cms-transactionId:',&#10;    AppName: app.name, 	&#10;    FlowName: flow.name, 	&#10;    BusinessProcessName:  &quot;Customer Registration&quot;, 	&#10;    Category:  &quot;Customer&quot;, 	&#10;    OriginatingApplication:  &quot;Process API&quot;, 	&#10;    DesinationApplication:  &quot;CUSTOMER SAPI&quot;, 	&#10;    CustomerId: &quot;NA&quot;, 	&#10;    txnState:  &quot;END&quot; &#10;}]" />
+		<ee:transform doc:name="Transform Message" doc:id="2f40e905-85b0-48ab-a184-c9bbeacae0fe">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+vars.requestData.payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+</mule>

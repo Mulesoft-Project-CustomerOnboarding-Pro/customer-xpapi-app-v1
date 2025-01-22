@@ -52,6 +52,13 @@
 			<version>1.10.4</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
+		<dependency>
+			<groupId>79bc7f5b-f575-471b-a247-9502aba1a082</groupId>
+			<artifactId>customer-xpapi-raml</artifactId>
+			<version>1.0.3</version>
+			<classifier>raml</classifier>
+			<type>zip</type>
+		</dependency>
 	</dependencies>
 
 	<repositories>

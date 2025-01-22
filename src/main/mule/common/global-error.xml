@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	
+	        <error-handler name="Error_Handler_Apikit">
+            <on-error-propagate type="APIKIT:BAD_REQUEST">
+                <logger level="INFO" doc:name="Error_Logger" doc:id="db7f4def-190c-4b36-81a1-abde8819f9b5" message="#[%dw 2.0 &#10;output application/json indent = false &#10;--- &#10;{ 	&#10;    TimeStamp: (now() &gt;&gt; &quot;UTC&quot;)  as String {format: &quot;yyyy-MM-dd:hh-mm-ss&quot;}, &#10;    transactionId: vars.headers.'x-cms-transactionid:',&#10;    AppName: app.name, 	&#10;    FlowName: flow.name, 	&#10;    BusinessProcessName:  &quot;Customer Registration&quot;, 	&#10;    Category:  &quot;Customer&quot;, 	&#10;    OriginatingApplication:  &quot;Process API&quot;, 	&#10;    DesinationApplication:  &quot;Salesforce&quot;, 	&#10;    CustomerId: &quot;NA&quot;, 	&#10;    txnState:  &quot;Error&quot; &#10;}]" />
+			<ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{ 
+	"msg": "failed operation",
+	"code": 400,
+	"success": false,
+	"eventId": vars.requestData.headers.'x-cms-transactionid',
+	"error": {
+		"type": "BAD_REQUEST",
+		"title": "Invalid Request",
+		"details": "The input contains invalid data"
+
+	        }
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            
+</on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <logger level="INFO" doc:name="Error_Logger" doc:id="e8fc7856-a2ad-480b-8b9c-053c9a6bed81" message="#[%dw 2.0 &#10;output application/json indent = false &#10;--- &#10;{ 	&#10;    TimeStamp: (now() &gt;&gt; &quot;UTC&quot;)  as String {format: &quot;yyyy-MM-dd:hh-mm-ss&quot;}, &#10;    transactionId: vars.headers.'x-cms-transactionid:',&#10;    AppName: app.name, 	&#10;    FlowName: flow.name, 	&#10;    BusinessProcessName:  &quot;Customer Registration&quot;, 	&#10;    Category:  &quot;Customer&quot;, 	&#10;    OriginatingApplication:  &quot;Process API&quot;, 	&#10;    DesinationApplication:  &quot;Salesforce&quot;, 	&#10;    CustomerId: &quot;NA&quot;, 	&#10;    txnState:  &quot;Error&quot; &#10;}]" />
+			<ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{ 
+		"msg": "failed operation",
+		"code": 404,
+		"success": false,
+		"eventId": vars.requestData.headers.'x-cms-transactionid',
+		"error": 
+  {
+				"type": "NOT_FOUND",
+				"title": "Resource not found",
+				"details": "The URI requested is invalid or the resource requested does not exists"
+
+			  }
+  }
+]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            
+</on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <logger level="INFO" doc:name="Error_Logger" doc:id="890f1ad0-6288-4505-9d19-5207cf5214f7" message="#[%dw 2.0 &#10;output application/json indent = false &#10;--- &#10;{ 	&#10;    TimeStamp: (now() &gt;&gt; &quot;UTC&quot;)  as String {format: &quot;yyyy-MM-dd:hh-mm-ss&quot;}, &#10;    transactionId: vars.headers.'x-cms-transactionid:',&#10;    AppName: app.name, 	&#10;    FlowName: flow.name, 	&#10;    BusinessProcessName:  &quot;Customer Registration&quot;, 	&#10;    Category:  &quot;Customer&quot;, 	&#10;    OriginatingApplication:  &quot;Process API&quot;, 	&#10;    DesinationApplication:  &quot;Salesforce&quot;, 	&#10;    CustomerId: &quot;NA&quot;, 	&#10;    txnState:  &quot;Error&quot; &#10;}]" />
+			<ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{ 
+	"msg": "Method Not Allowed",
+	"code": 405,
+	"success": false,
+	"eventId": vars.requestData.headers.'x-cms-transactionid',
+	"error": {
+		"type": "METHOD_NOT_ALLOWED",
+		"title": "Method not allowed",
+		"details": "The input contains invalid data"
+
+	        }
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[405]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            
+</on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <logger level="INFO" doc:name="Error_Logger" doc:id="2e29300a-5b23-494d-9dae-b546acba10f8" message="#[%dw 2.0 &#10;output application/json indent = false &#10;--- &#10;{ 	&#10;    TimeStamp: (now() &gt;&gt; &quot;UTC&quot;)  as String {format: &quot;yyyy-MM-dd:hh-mm-ss&quot;}, &#10;    transactionId: vars.headers.'x-cms-transactionid:',&#10;    AppName: app.name, 	&#10;    FlowName: flow.name, 	&#10;    BusinessProcessName:  &quot;Customer Registration&quot;, 	&#10;    Category:  &quot;Customer&quot;, 	&#10;    OriginatingApplication:  &quot;Process API&quot;, 	&#10;    DesinationApplication:  &quot;Salesforce&quot;, 	&#10;    CustomerId: &quot;NA&quot;, 	&#10;    txnState:  &quot;Error&quot; &#10;}]" />
+			<ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{ 
+	"msg": "Method Not Allowed",
+	"code": 415,
+	"success": false,
+	"eventId": vars.requestData.headers.'x-cms-transactionid',
+	"error": {
+		"type": "UNSUPPORTED_MEDIA_TYPE",
+		"title": "Unsupported Media Type",
+		"details": "The input contains invalid data"
+
+	        }
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[415]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            
+</on-error-propagate>
+        </error-handler>
+	<error-handler name="Error_Handler_Application" doc:id="5747b310-397a-47c9-84b7-f4e95cb534bf">
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ced5855c-389c-4db6-8f1f-c96966231c54" type="HTTP:BAD_GATEWAY, HTTP:BAD_REQUEST, HTTP:CLIENT_SECURITY, HTTP:CONNECTIVITY, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_FOUND, HTTP:SECURITY, HTTP:TIMEOUT, HTTP:UNAUTHORIZED">
+			<logger level="INFO" doc:name="Error_Logger" doc:id="548285b2-d516-4b87-8ece-e1946889f77e" message="#[%dw 2.0 &#10;output application/json indent = false &#10;--- &#10;{ 	&#10;    TimeStamp: (now() &gt;&gt; &quot;UTC&quot;)  as String {format: &quot;yyyy-MM-dd:hh-mm-ss&quot;}, &#10;    transactionId: vars.headers.'x-cms-transactionid:',&#10;    AppName: app.name, 	&#10;    FlowName: flow.name, 	&#10;    BusinessProcessName:  &quot;Customer Registration&quot;, 	&#10;    Category:  &quot;Customer&quot;, 	&#10;    OriginatingApplication:  &quot;Process API&quot;, 	&#10;    DesinationApplication:  &quot;Salesforce&quot;, 	&#10;    CustomerId: &quot;NA&quot;, 	&#10;    txnState:  &quot;Error&quot; &#10;}]" />
+			<ee:transform doc:name="Error Transform Message" doc:id="8aa93a1b-0c9f-4059-89bf-700109b330af">
+				<ee:message>
+					<ee:set-payload ><![CDATA[%dw 2.0var error = ???
+
+output application/json
+---
+{ 
+	"msg": "failed operation",
+	"code": 500,
+	"success": false,
+	"eventId": vars.requestData.headers.'x-cms-transactionid',
+	"error": {
+		"type": error.errorType,
+		"title": "HTTP SAPI Error",
+		"details": error.description
+
+	        }
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="01fed6fc-bdce-4810-84b9-9b60eccd9383" type="ANY">
+			<logger level="INFO" doc:name="Error_Logger" doc:id="5c385fff-260e-4af5-a93d-23d54334c21c" message="#[%dw 2.0 &#10;output application/json indent = false &#10;--- &#10;{ 	&#10;    TimeStamp: (now() &gt;&gt; &quot;UTC&quot;)  as String {format: &quot;yyyy-MM-dd:hh-mm-ss&quot;}, &#10;    transactionId: vars.headers.'x-cms-transactionid:',&#10;    AppName: app.name, 	&#10;    FlowName: flow.name, 	&#10;    BusinessProcessName:  &quot;Customer Registration&quot;, 	&#10;    Category:  &quot;Customer&quot;, 	&#10;    OriginatingApplication:  &quot;Process API&quot;, 	&#10;    DesinationApplication:  &quot;Salesforce&quot;, 	&#10;    CustomerId: &quot;NA&quot;, 	&#10;    txnState:  &quot;Error&quot; &#10;}]"/>
+			<ee:transform doc:name="Error Transform Message" doc:id="24bff56b-1639-4b70-9bf6-3f302fe4eb9e">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{ 
+	"msg": "failed operation",
+	"code": 500,
+	"success": false,
+	"eventId": vars.requestData.headers.'x-cms-transactionid',
+	"error": {
+		"type": error.errorType,
+		"title": "Critical Error",
+		"details": error.description
+
+	        }
+}
+]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+	
+	
+</mule>

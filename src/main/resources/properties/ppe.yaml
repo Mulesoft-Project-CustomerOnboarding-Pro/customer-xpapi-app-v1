@@ -1,0 +1,7 @@
+http.listener.host: "0.0.0.0"
+http.listener.port: "8082"
+http.listener.readtimeout: "30000"
+
+sfdc.securityToken: "Yp5MzBFUfdUjtqj5mNZqRDYyJ"
+sdfc.username: "harshtyagi3636@gmail.com"
+sfdc.password: "Ganeshji@123"
