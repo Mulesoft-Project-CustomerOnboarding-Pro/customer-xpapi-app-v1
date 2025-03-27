@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	 <http:listener-config name="api-httpListenerConfig">
+        <http:listener-connection host="${http.listener.host}" port="${http.listener.port}" readTimeout="${http.listener.readtimeout}"/>
+    </http:listener-config>
+    <apikit:config name="api-config" api="api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<configuration-properties doc:name="Configuration properties" doc:id="a2b1f534-e2b3-4b59-9a3e-3b7ee6802b40" file="properties/${mule.env}.yaml" />
+	<http:request-config name="HTTP_Request_Configuration_CustomerPAPI" doc:name="HTTP Request configuration" doc:id="ee4680a3-739c-4899-8327-299f7e5b6e5d" >
+		<http:request-connection host="${http.requester.papi.customer.host}" port="${http.requester.papi.customer.port}" />
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="48183c7f-51f0-468b-aba3-56345957c15f" file="properties\common.yaml" />
+    
+	
+</mule>

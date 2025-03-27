@@ -1,0 +1,59 @@
+#%RAML 1.0
+title: customer-Sapi-raml
+description: this raml file will contains resource for the customer API
+version: 1.0.0
+
+
+uses:
+  common-library: /exchange_modules/79bc7f5b-f575-471b-a247-9502aba1a082/common-fragment/1.0.1/common-fragments.raml
+
+securitySchemes:
+  :
+    type: OAuth 2.0
+  
+
+/customers:
+  post:
+    description: This API will help register new customer on the vio app.This api will help to automate the on boarding process
+
+    is:
+      - common-library.common-header
+      - common-library.authorization-error
+      - common-library.accept-header
+      - common-library.error-response
+          
+    
+    body:
+      application/json:
+        type: common-library.registration
+    
+    responses:
+      201:
+        body:
+          application/json:
+            type: object
+            properties:
+              customerResponse:
+                type: common-library.success-response
+
+/ping:
+  get:
+    description: This API will help to check the health of the application. application is running up or not
+
+
+    is:
+      - common-library.common-header
+      - common-library.error-response
+    responses:
+      200:
+        body:
+          application/json:
+            type: common-library.success-response
+            example: !include /exchange_modules/79bc7f5b-f575-471b-a247-9502aba1a082/common-fragment/1.0.1/examples/success-response-example.json 
+              
+              
+
+
+
+
+

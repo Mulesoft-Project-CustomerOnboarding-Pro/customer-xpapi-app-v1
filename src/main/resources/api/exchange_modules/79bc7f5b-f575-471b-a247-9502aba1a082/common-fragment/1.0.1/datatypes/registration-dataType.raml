@@ -1,0 +1,56 @@
+#%RAML 1.0 DataType
+
+type: object
+properties:
+  contact:
+    type: !include contact-dataType.raml 
+
+  password:
+    required: true
+    type: string
+    example: "dsfhdshxf"
+
+  confirmPassword:
+    required: true
+    type: string
+    example: "dsfhdshxf"
+
+  acceptDataPolicy:
+    type: boolean
+    required: true
+    example: true
+  
+  recieveNews:
+    type: boolean
+    required: true
+    example: true
+
+  acceptPIC:
+    type: boolean
+    required: true
+    example: true
+
+  locale:
+    type: string
+    required: true
+    example: "en"
+
+  captchatoken:
+    required: true
+    type: string
+    example: "sbmhasvdfhdsfhsdfjvjhsfbvsfdvvdhgv"
+
+  recieveClaimsettle:
+    type: boolean
+    required: true
+    example: true 
+      
+      
+      
+
+
+
+
+
+      
+          
